@@ -47,13 +47,11 @@ RUN stack upgrade && cabal update
 RUN cabal install alex happy
 
 # Install HIE
-RUN git clone https://github.com/haskell/haskell-ide-engine --branch 0.11.0.0 --recurse-submodules \
-    && cd haskell-ide-engine \
-    && sed -i "s|lts-13.18 # GHC 8.6.4|lts-12.26 # GHC 8.4.4 |g" shake.yaml 
+RUN git clone https://github.com/haskell/haskell-ide-engine --branch 1.0.0.0 --recurse-submodules
 RUN cd haskell-ide-engine \
     && stack install.hs cabal-hie-8.4.4
 RUN cd haskell-ide-engine \
-    && stack install.hs cabal-build-doc
+    && stack install.hs cabal-build-data
 
 # Clean HIE build files
 RUN rm -rf /haskell-ide-engine
