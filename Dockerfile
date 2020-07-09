@@ -1,4 +1,4 @@
-FROM haskell:8.6.5
+FROM haskell:8.8.3
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,11 +18,10 @@ RUN apt-get -y install --no-install-recommends apt-utils 2>&1 \
     && apt-get -y install libicu-dev libtinfo-dev libgmp-dev
 
 # Install HIE
-RUN git clone https://github.com/haskell/haskell-ide-engine --branch 0.11.0.0 --recurse-submodules \
+RUN git clone https://github.com/haskell/haskell-ide-engine --branch 1.4 --recurse-submodules \
     && cd haskell-ide-engine \
-    && sed -i "s|lts-13.18 # GHC 8.6.4|lts-13.27 # GHC 8.6.5 |g" shake.yaml \
-    && stack install.hs cabal-hie-8.6.5 \
-    && stack install.hs cabal-build-doc
+    && stack ./install.hs hie-8.8.3 \
+    && stack ./install.hs data
 
 # Clean HIE build files
 RUN rm -rf /haskell-ide-engine
