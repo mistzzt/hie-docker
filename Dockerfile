@@ -17,11 +17,11 @@ RUN apt-get -y install --no-install-recommends apt-utils 2>&1 \
     # Install HIE Dependencies
     && apt-get -y install libicu-dev libtinfo-dev libgmp-dev
 
-# Install HIE
+# Install HIE 1.4
 RUN git clone https://github.com/haskell/haskell-ide-engine --branch 1.4 --recurse-submodules \
+    && /usr/local/bin/stack config set install-ghc --global true \
     && cd haskell-ide-engine \
-    && stack ./install.hs hie-8.8.3 \
-    && stack ./install.hs data
+    && stack ./install.hs hie
 
 # Clean HIE build files
 RUN rm -rf /haskell-ide-engine
