@@ -1,5 +1,8 @@
 FROM haskell:8.8.3
 
+ENV GHC_VERSION="8.8.3"
+ENV HLS_VERSION="0.4.0"
+
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -15,16 +18,16 @@ RUN apt-get -y install --no-install-recommends apt-utils 2>&1 \
     && apt-get -y install curl wget screen build-essential \
     #
     # Install HIE Dependencies
-    && apt-get -y install libicu-dev libtinfo-dev libgmp-dev
+    && apt-get -y install libicu-dev libncurses-dev libgmp-dev zlib1g-dev
 
-# Install HIE 1.4
-RUN git clone https://github.com/haskell/haskell-ide-engine --branch 1.4 --recurse-submodules \
+RUN git clone https://github.com/haskell/haskell-language-server.git --branch=${HLS_VERSION} --recurse-submodules \
     && /usr/local/bin/stack config set install-ghc --global true \
-    && cd haskell-ide-engine \
-    && stack ./install.hs hie
+    && cd haskell-language-server \
+    && stack ./install.hs hls-${GHC_VERSION} \
+    && stack ./install.hs data
 
-# Clean HIE build files
-RUN rm -rf /haskell-ide-engine
+# Clean build files
+RUN rm -rf /haskell-language-server
 
 # Clean up
 RUN apt-get autoremove -y \
